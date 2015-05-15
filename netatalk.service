@@ -1,0 +1,11 @@
+[Unit]
+Description=Netatalk, AFP fileserver
+After=network.target auditd.service
+
+[Service]
+ExecStart=/usr/bin/docker run --net=host -v /var/log:/host/var_log -v /home:/host/home netatalk-current /bin/bash -c '/root/netatalk_start.sh ; sleep 10000d' > /var/run/netatalk.container_id
+ExecStop=/usr/bin/docker exec `cat /var/run/netatalk.container_id` /root/netatalk_stop.sh
+ExecStopPost=/usr/bin/docker stop `cat /var/run/netatalk.container_id`
+
+[Install]
+WantedBy=multi-user.target
